@@ -2,17 +2,14 @@
 
 > A Vue.js project
 
+
+![miestai](https://user-images.githubusercontent.com/94111690/177990722-cb2d55d3-c194-4b2b-b2d3-baa16dd34e83.gif)
+
+
 ## Build Setup
 
-``` bash
-# install dependencies
 npm install
 
-# serve with hot reload at localhost:8080
 npm run dev
 
-# build for production with minification
-npm run build
-```
 
-For detailed explanation on how things work, consult the [docs for vue-loader](http://vuejs.github.io/vue-loader).
