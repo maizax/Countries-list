@@ -9,8 +9,8 @@
       @close="closeAddCity"
       @refresh="getCities"
       :countryId="countryId"
-      :settings="settings"
-      :salis="false"
+      :settings="cityModalInfo"
+      :isCountry="false"
     />
     <ul class="searchBox">
       <div>
@@ -41,8 +41,14 @@
             <td>{{ city.attributes.postal_code }}</td>
 
             <td class="icons">
-              <i class="fa-solid fa-trash solid1" @click="openDeleteCity(city.id)"></i>
-              <i class="fa-solid fa-pencil solid2" @click="openEditCity(city.id)"></i>
+              <i
+                class="fa-solid fa-trash solid1"
+                @click="openDeleteCity(city.id)"
+              ></i>
+              <i
+                class="fa-solid fa-pencil solid2"
+                @click="openEditCity(city.id)"
+              ></i>
             </td>
           </tr>
         </tbody>
@@ -54,8 +60,8 @@
           :cityId="cityId"
           :countryId="countryId"
           :deleteCityActive="deleteCityActive"
-          :settings="settings"
-          :salis="false"
+          :settings="cityModalInfo"
+          :isCountry="false"
         />
         <edit
           :class="{ 'is-active': editCityActive }"
@@ -65,19 +71,22 @@
           :cityId="cityId"
           :countryId="countryId"
           :editCityActive="editCityActive"
-          :settings="settings"
-          :salis="false"
+          :settings="cityModalInfo"
+          :isCountry="false"
         />
       </table>
     </div>
     <nav class="pagination is-centered is-small">
       <ul class="pagination-list">
         <li v-for="link in cities.meta.links" :key="link.label">
-          <a @click="setCityPage(link.url.slice(-1))"
+          <a
+            @click="setCityPage(link.url.slice(-1))"
             class="pagination-link"
             :class="{ 'is-current': link.active }"
             aria-label="Goto page"
-            > {{ link.label }} </a>
+          >
+            {{ link.label }}
+          </a>
         </li>
       </ul>
     </nav>
@@ -95,18 +104,19 @@ export default {
   components: {
     Add,
     Edit,
-    Delete
+    Delete,
   },
 
   data() {
     return {
-      settings: {
-        prideti: "PRIDĖTI MIESTĄ",
-        pavadinimas: "Pavadinimas",
-        plotas: "Užimamas plotas",
-        gyventojai: "Gyventojų skaičius",
-        kodas: "Miesto pašto kodas",
-        url: "https://akademija.teltonika.lt/countries_api/api/countries"
+      cityModalInfo: {
+        nameOfHeader: "PRIDĖTI MIESTĄ",
+        nameOfNewElement: "Pavadinimas",
+        areaOfNewElement: "Užimamas plotas",
+        populationOfNewElement: "Gyventojų skaičius",
+        codeOfNewElement: "Miesto pašto kodas",
+        url: "https://akademija.teltonika.lt/countries_api/api/countries",
+        nameOfEditingElement: "REDAGUOTI MIESTĄ"
       },
       cities: [],
       countryId: this.$route.params.id,
@@ -116,23 +126,25 @@ export default {
       deleteCityActive: false,
       search: "",
       cityId: "",
-      url: "https://akademija.teltonika.lt/countries_api/api/countries/"
     };
   },
   methods: {
     async getCities() {
       try {
-        const response = await axios.get(
-            this.url +
+       await axios
+          .get(
+            this.cityModalInfo.url +
+              "/" +
               this.countryId +
               "/cities?page=" +
               this.pageNumber +
               "&search=" +
               this.search
-          ).then(response => (this.cities = response.data));
+          )
+          .then((response) => (this.cities = response.data));
       } catch (error) {
         this.$toasted.global.error({
-          message: "Error fetching data!"
+          message: "Error fetching data!",
         });
       }
     },
@@ -159,11 +171,11 @@ export default {
     },
     closeDeleteCity() {
       this.deleteCityActive = false;
-    }
+    },
   },
   created() {
     this.getCities();
-  }
+  },
 };
 </script>
 

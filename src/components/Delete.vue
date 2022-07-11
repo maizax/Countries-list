@@ -20,7 +20,7 @@
 import axios from "axios";
 export default {
   name: "Delete",
-  props: ["countryId", "settings", "salis", "cityId", "deleteActive"],
+  props: ["countryId", "settings", "isCountry", "cityId", "deleteActive"],
   data() {
     return {
       data: []
@@ -28,19 +28,19 @@ export default {
   },
   methods: {
     async getDeleteInfo() {
-      if (this.salis) {
-        const response = await axios.get(this.settings.url + "/" + this.countryId)
+      if (this.isCountry) {
+        await axios.get(this.settings.url + "/" + this.countryId)
           .then(response => (this.data = response.data.data.attributes));
       } else {
-        const response = await axios
+        await axios
           .get(this.settings.url + "/" + this.countryId + "/cities/" + this.cityId)
           .then(response => (this.data = response.data.data.attributes));
       }
     },
     async del() {
-      if (this.salis) {
+      if (this.isCountry) {
         try {
-          const response = await axios.delete(this.settings.url + "/" + this.countryId)
+          await axios.delete(this.settings.url + "/" + this.countryId)
             .then(() => this.$emit("refresh"))
             .then(() => this.close());
           this.$toasted.global.success({
@@ -52,7 +52,7 @@ export default {
           })}
       } else {
         try {
-          const response = await axios
+          await axios
             .delete(this.settings.url + "/" + this.countryId + "/cities/" + this.cityId)
             .then(() => this.$emit("refresh"))
             .then(() => this.close());

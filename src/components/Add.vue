@@ -3,28 +3,34 @@
     <div class="modal-background" />
     <div class="modal-card">
       <header class="modal-card-head">
-        <p class="modal-card-title">{{ settings.prideti }}</p>
+        <p class="modal-card-title">{{ settings.nameOfHeader }}</p>
         <button class="delete" @click="$emit('close')"></button>
       </header>
       <section class="modal-card-body">
         <div class="field">
-          <label class="label">{{ settings.pavadinimas }}</label>
+          <label class="label">{{ settings.nameOfNewElement }}</label>
           <input class="input" v-model="name" type="text" required />
         </div>
         <div class="field">
-          <label class="label">{{ settings.plotas }}</label>
+          <label class="label">{{ settings.areaOfNewElement }}</label>
           <input class="input" v-model="area" type="number" min="0" required />
         </div>
         <div class="field">
-          <label class="label">{{ settings.gyventojai }}</label>
-          <input class="input" v-model="population" type="number" min="0" required />
+          <label class="label">{{ settings.populationOfNewElement }}</label>
+          <input
+            class="input"
+            v-model="population"
+            type="number"
+            min="0"
+            required
+          />
         </div>
-        <div class="field" v-if="salis">
-          <label class="label">{{ settings.kodas }}</label>
+        <div class="field" v-if="isCountry">
+          <label class="label">{{ settings.codeOfNewElement }}</label>
           <input class="input" v-model="phone_code" type="tel" required />
         </div>
         <div class="field" v-else>
-          <label class="label">{{ settings.kodas }}</label>
+          <label class="label">{{ settings.codeOfNewElement }}</label>
           <input class="input" v-model="postal_code" type="tel" required />
         </div>
       </section>
@@ -41,59 +47,63 @@
 import axios from "axios";
 export default {
   name: "Add",
-  props: ["settings", "salis", "countryId"],
+  props: ["settings", "isCountry", "countryId"],
   data() {
     return {
       name: "",
       area: "",
       population: "",
       phone_code: "",
-      postal_code: ""
+      postal_code: "",
+      visible: true,
     };
   },
   methods: {
     async add() {
-      if (this.salis) {
-        try { const response = await axios.post(this.settings.url, {
+      if (this.isCountry) {
+        try {
+          await axios
+            .post(this.settings.url, {
               data: {
                 attributes: {
                   name: this.name,
                   area: this.area,
                   population: this.population,
-                  phone_code: this.phone_code
-                }
-              }
+                  phone_code: this.phone_code,
+                },
+              },
             })
             .then(() => this.$emit("refresh"))
             .then(() => this.close());
           this.$toasted.global.success({
-            message: "Added successfully!"
+            message: "Added successfully!",
           });
         } catch (error) {
           this.$toasted.global.error({
-            message: "Please fill all fields!"
+            message: "Please fill all fields!",
           });
         }
       } else {
         try {
-          const response = await axios.post(this.settings.url + '/' + this.countryId + "/cities", {
+          await axios
+            .post(this.settings.url + "/" + this.countryId + "/cities", {
               data: {
                 attributes: {
                   name: this.name,
                   area: this.area,
                   population: this.population,
-                  postal_code: this.postal_code
-                }
-              }
+                  postal_code: this.postal_code,
+                },
+              },
             })
             .then(() => this.$emit("refresh"))
             .then(() => this.close());
           this.$toasted.global.success({
-            message: "Added successfully!"
+            message: "Added successfully!",
           });
         } catch (error) {
           this.$toasted.global.error({
-            message: "Please fill all fields!"
+            message: "Please fill all fields!",
           });
         }
       }
@@ -108,7 +118,7 @@ export default {
       this.population = "";
       this.phone_code = "";
       this.postal_code = "";
-    }
-  }
+    },
+  },
 };
 </script>

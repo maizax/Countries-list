@@ -1,5 +1,5 @@
-import Countries from "../components/Countries.vue";
-import Cities from "../components/Cities.vue";
+import Countries from "../components/CountriesList.vue";
+import Cities from "../components/CitiesList.vue";
 import Vue from "vue";
 import Router from "vue-router";
 

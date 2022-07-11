@@ -3,28 +3,28 @@
     <div class="modal-background" />
     <div class="modal-card">
       <header class="modal-card-head">
-        <p class="modal-card-title">{{ settings.redaguoti }}</p>
+        <p class="modal-card-title">{{ settings.nameOfEditingElement }}</p>
         <button class="delete" @click="$emit('close')"></button>
       </header>
       <section class="modal-card-body">
         <div class="field">
-          <label class="label">{{ settings.pavadinimas }}</label>
+          <label class="label">{{ settings.nameOfNewElement }}</label>
           <input class="input" v-model="data.name" type="text" required />
         </div>
         <div class="field">
-          <label class="label">{{ settings.plotas }}</label>
+          <label class="label">{{ settings.areaOfNewElement }}</label>
           <input class="input" v-model="data.area" type="number" required />
         </div>
         <div class="field">
-          <label class="label">{{ settings.gyventojai }}</label>
+          <label class="label">{{ settings.populationOfNewElement }}</label>
           <input class="input" v-model="data.population" type="number" required />
         </div>
-        <div class="field" v-if="salis">
-          <label class="label">{{ settings.kodas }}</label>
+        <div class="field" v-if="isCountry">
+          <label class="label">{{ settings.codeOfNewElement }}</label>
           <input class="input" v-model="data.phone_code" type="tel" required />
         </div>
         <div class="field" v-else>
-          <label class="label">{{ settings.kodas }}</label>
+          <label class="label">{{ settings.codeOfNewElement }}</label>
           <input class="input" v-model="data.postal_code" type="tel" required />
         </div>
       </section>
@@ -41,7 +41,7 @@
 import axios from "axios";
 export default {
   name: "Edit",
-  props: ["countryId", "settings", "salis", "cityId", "editCityActive"],
+  props: ["countryId", "settings", "isCountry", "cityId", "editCityActive"],
   data() {
     return {
       data: []
@@ -49,18 +49,18 @@ export default {
   },
   methods: {
     async getEditInfo() {
-      if (this.salis) {
-        const response = await axios.get(this.settings.url + "/" + this.countryId)
+      if (this.isCountry) {
+        await axios.get(this.settings.url + "/" + this.countryId)
           .then(response => (this.data = response.data.data.attributes));
       } else {
-        const response = await axios.get(this.settings.url + "/" + this.countryId + "/cities/" + this.cityId)
+        await axios.get(this.settings.url + "/" + this.countryId + "/cities/" + this.cityId)
           .then(response => (this.data = response.data.data.attributes));
       }
     },
     async update() {
-      if (this.salis) {
+      if (this.isCountry) {
         try {
-          const response = await axios
+          await axios
             .put(this.settings.url + '/' + this.countryId, {
               data: {
                 attributes: {
@@ -83,7 +83,7 @@ export default {
         }
       } else {
         try {
-          const response = await axios
+          await axios
             .put(this.settings.url + '/' + this.countryId + "/cities/" + this.cityId, {
               data: {
                 attributes: {

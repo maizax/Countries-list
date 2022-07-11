@@ -8,8 +8,8 @@
       :class="{ 'is-active': addCountryActive }"
       @close="closeAddCountry"
       @refresh="getCountries"
-      :settings="settings"
-      :salis="true"
+      :settings="countryModalInfo"
+      :isCountry="true"
     />
     <ul class="searchBox">
       <input class="input" type="text" v-model="search" @input="getCountries" />
@@ -53,8 +53,8 @@
           @refresh="getCountries"
           :key="countryId"
           :countryId="countryId"
-          :settings="settings"
-          :salis="true"
+          :settings="countryModalInfo"
+          :isCountry="true"
         />
         <edit
           :class="{ 'is-active': editCountryActive }"
@@ -62,8 +62,8 @@
           @refresh="getCountries"
           :key="countryId + 'i'"
           :countryId="countryId"
-          :settings="settings"
-          :salis="true"
+          :settings="countryModalInfo"
+          :isCountry="true"
         ></edit>
       </table>
     </div>
@@ -97,14 +97,14 @@ export default {
   },
   data() {
     return {
-      settings: {
-        prideti: "PRIDĖTI ŠALĮ",
-        pavadinimas: "Pavadinimas",
-        plotas: "Užimamas plotas",
-        gyventojai: "Gyventojų skaičius",
-        kodas: "Šalies Tel. kodas",
+      countryModalInfo: {
+        nameOfHeader: "PRIDĖTI ŠALĮ",
+        nameOfNewElement: "Pavadinimas",
+        areaOfNewElement: "Užimamas plotas",
+        populationOfNewElement: "Gyventojų skaičius",
+        codeOfNewElement: "Šalies Tel. kodas",
         url: "https://akademija.teltonika.lt/countries_api/api/countries",
-        redaguoti: "REDAGUOTI ŠALĮ"
+        nameOfEditingElement: "REDAGUOTI ŠALĮ"
       },
       countries: {},
       pageNumber: "",
@@ -114,14 +114,13 @@ export default {
       countryId: 97,
       deleteCountryId: "",
       search: "",
-      url: "https://akademija.teltonika.lt\/countries_api\/api\/countries"
     };
   },
   methods: {
     async getCountries() {
       try {
-        const response = await axios
-          .get(this.url + "?page=" + this.pageNumber + "&search=" + this.search)
+        await axios
+          .get(this.countryModalInfo.url + "?page=" + this.pageNumber + "&search=" + this.search)
           .then(response => {
             this.countries = response.data;
           });
